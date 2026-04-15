@@ -103,7 +103,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative w-full aspect-[16/9] overflow-hidden shadow-2xl group bg-[var(--color-theme-beige)]">
+    <div className="relative w-full aspect-[16/9] md:aspect-[21/9] max-h-[400px] md:max-h-[550px] overflow-hidden shadow-2xl group bg-[var(--color-theme-beige)]">
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
           key={current}
@@ -144,14 +144,14 @@ export default function HeroCarousel() {
           
           {/* Interactive Shop Now Overlay */}
           {banners[current].showButton && (
-            <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 md:left-auto md:right-[15%] md:translate-x-0 z-30">
+            <div className="absolute bottom-[8%] right-[5%] md:right-[8%] z-30">
               <motion.button
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255,140,0,0.5)" }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleShopNow(banners[current])}
-                className="flex items-center gap-3 px-8 py-3 md:px-10 md:py-4 bg-[var(--color-theme-orange)] text-white rounded-full font-bold text-sm md:text-lg shadow-2xl transition-all uppercase tracking-widest"
+                className="flex items-center gap-2 px-6 py-2.5 md:px-8 md:py-3 bg-[var(--color-theme-orange)] text-white rounded-full font-bold text-xs md:text-sm shadow-xl transition-all uppercase tracking-widest whitespace-nowrap"
               >
-                <ShoppingCart size={22} />
+                <ShoppingCart size={18} className="md:w-5 md:h-5" />
                 {language === 'en' ? 'Shop Now' : language === 'zh' ? '立即购买' : 'Beli Sekarang'}
               </motion.button>
             </div>
