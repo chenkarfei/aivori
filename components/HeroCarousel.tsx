@@ -19,7 +19,7 @@ const banners = [
   },
   {
     id: 2,
-    src: 'https://i.imghippo.com/files/xVZ1774Ug.png',
+    src: 'https://i.imghippo.com/files/g8857sw.png',
     alt: 'Dragon Fruit Snacks',
     showButton: true,
     productName: 'Dragon Fruit',
@@ -27,7 +27,7 @@ const banners = [
   },
   {
     id: 3,
-    src: 'https://i.imghippo.com/files/NGxJ9968KCg.png',
+    src: 'https://i.imghippo.com/files/Ylln8587Fs.png',
     alt: 'Mixed Vegetable Snacks',
     showButton: true,
     productName: 'Mix Vege',
