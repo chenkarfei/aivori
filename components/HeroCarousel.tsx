@@ -12,7 +12,7 @@ import { db } from '@/lib/firebase';
 const banners = [
   {
     id: 1,
-    src: 'https://i.imghippo.com/files/Fbln6514euk.png',
+    src: 'https://i.imghippo.com/files/KDZn8497PtU.png',
     alt: 'Main Banner',
     showButton: false,
     link: null
