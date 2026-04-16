@@ -18,6 +18,7 @@ export default function AdminPortal() {
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState<any>({
     id: '', price: 0, image: '', weight: '', isHalal: false, stockStatus: 'in_stock',
@@ -25,6 +26,38 @@ export default function AdminPortal() {
     description: { en: '', zh: '', ms: '' },
     ingredients: { en: '', zh: '', ms: '' }
   });
+
+  const compressImage = (base64Str: string, maxWidth = 800, maxHeight = 800, quality = 0.6): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        // Using 0.6 quality to be safe with Firestore 1MB limit
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = (e) => reject(e);
+      img.src = base64Str;
+    });
+  };
 
   useEffect(() => {
     // Removed the redirect logic here so the login button can be shown
@@ -52,37 +85,15 @@ export default function AdminPortal() {
     
     try {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 800;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          
-          // Compress to JPEG to save space
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          setFormData({ ...formData, image: dataUrl });
+      reader.onload = async (event) => {
+        try {
+          const compressed = await compressImage(event.target?.result as string);
+          setFormData({ ...formData, image: compressed });
+        } catch (err) {
+          setErrorMessage("Failed to compress image.");
+        } finally {
           setIsUploading(false);
-        };
-        img.src = event.target?.result as string;
+        }
       };
       reader.onerror = () => {
         setErrorMessage("Failed to read image file.");
@@ -242,6 +253,66 @@ export default function AdminPortal() {
     } finally {
       setIsTranslating(false);
     }
+  };
+
+  const handleAiImageGeneration = async () => {
+    if (!formData.name.en) {
+      setErrorMessage("Please enter a product name first to generate a relevant image.");
+      return;
+    }
+
+    setIsGeneratingImage(true);
+    setErrorMessage('');
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
+      
+      const imagePrompt = `A professional, high-quality studio product photograph of ${formData.name.en}. 
+      Description: ${formData.description.en}. 
+      The image should be appetizing, well-lit, and on a clean background suitable for an e-commerce website. 
+      Artisanal Malaysian snack style.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash-image",
+        contents: {
+          parts: [{ text: imagePrompt }]
+        },
+        config: {
+          imageConfig: {
+            aspectRatio: "1:1"
+          }
+        }
+      });
+
+      let generatedImageUrl = '';
+      if (response.candidates?.[0]?.content?.parts) {
+        for (const part of response.candidates[0].content.parts) {
+          if (part.inlineData) {
+            generatedImageUrl = `data:image/png;base64,${part.inlineData.data}`;
+            break;
+          }
+        }
+      }
+
+      if (generatedImageUrl) {
+        const compressed = await compressImage(generatedImageUrl);
+        setFormData({ ...formData, image: compressed });
+      } else {
+        // Fallback to a better search-based placeholder if generation didn't return an image
+        const keywords = formData.name.en.toLowerCase().replace(/[^a-z0-9]/g, ',');
+        setFormData({ ...formData, image: `https://loremflickr.com/800/800/${keywords}` });
+      }
+    } catch (error: any) {
+      console.error("AI Image Generation failed, falling back to search:", error);
+      // Fallback to a better search-based placeholder on error
+      const keywords = formData.name.en.toLowerCase().replace(/[^a-z0-9]/g, ',');
+      setFormData({ ...formData, image: `https://loremflickr.com/800/800/${keywords}` });
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData({ ...formData, image: '' });
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center font-bold text-2xl text-[var(--color-theme-orange)]">Loading...</div>;
@@ -418,7 +489,7 @@ export default function AdminPortal() {
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest opacity-40 ml-1">Product Image</label>
                 <div className="flex flex-col md:flex-row gap-6 items-start">
-                  <div className="flex-grow w-full">
+                  <div className="flex-grow w-full space-y-4">
                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[var(--color-theme-brown)]/20 rounded-2xl cursor-pointer hover:bg-white/50 transition-colors">
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Plus className="w-8 h-8 text-[var(--color-theme-brown)]/40 mb-2" />
@@ -426,20 +497,52 @@ export default function AdminPortal() {
                       </div>
                       <input type="file" accept="image/*" capture="environment" onChange={handleImageUpload} className="hidden" />
                     </label>
+                    
+                    {!formData.image && !isUploading && (
+                      <button
+                        onClick={handleAiImageGeneration}
+                        disabled={isGeneratingImage}
+                        className="flex items-center gap-2 px-6 py-3 bg-[var(--color-theme-orange)]/10 text-[var(--color-theme-orange)] rounded-2xl font-bold text-sm hover:bg-[var(--color-theme-orange)]/20 transition-all disabled:opacity-50 border-2 border-[var(--color-theme-orange)]/20 shadow-sm"
+                      >
+                        {isGeneratingImage ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+                        Generate Image with AI
+                      </button>
+                    )}
+
                     {isUploading && <p className="text-xs text-[var(--color-theme-orange)] font-bold mt-2 animate-pulse">Uploading image...</p>}
+                    {isGeneratingImage && <p className="text-xs text-[var(--color-theme-orange)] font-bold mt-2 animate-pulse">AI is generating image...</p>}
                   </div>
                   {formData.image && !isUploading && (
-                    <div className="relative group w-32 h-32">
-                      <NextImage 
-                        src={formData.image} 
-                        alt="Preview" 
-                        fill 
-                        className="object-cover rounded-2xl border-4 border-white shadow-lg" 
-                        unoptimized
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
-                        <span className="text-[10px] text-white font-bold uppercase tracking-widest">Preview</span>
+                    <div className="flex flex-col gap-3 shrink-0">
+                      <div className="relative group w-32 h-32">
+                        <NextImage 
+                          src={formData.image} 
+                          alt="Preview" 
+                          fill 
+                          className="object-cover rounded-2xl border-4 border-white shadow-lg" 
+                          unoptimized
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
+                          <span className="text-[10px] text-white font-bold uppercase tracking-widest">Preview</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleRemoveImage}
+                          className="flex-1 p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition-colors border border-red-100 flex items-center justify-center shadow-sm"
+                          title="Remove Image"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                        <button
+                          onClick={handleAiImageGeneration}
+                          disabled={isGeneratingImage}
+                          className="flex-1 p-3 bg-[var(--color-theme-orange)]/10 text-[var(--color-theme-orange)] rounded-xl hover:bg-[var(--color-theme-orange)]/20 transition-colors border border-[var(--color-theme-orange)]/20 flex items-center justify-center shadow-sm"
+                          title="Regenerate with AI"
+                        >
+                          {isGeneratingImage ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+                        </button>
                       </div>
                     </div>
                   )}

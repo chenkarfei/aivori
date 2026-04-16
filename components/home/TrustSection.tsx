@@ -28,25 +28,44 @@ export default function TrustSection() {
   const items = trustItems[language];
 
   return (
-    <section className="py-16 bg-white border-y border-[var(--color-theme-brown)]/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+    <section className="py-24 bg-[#FAF9F6] relative overflow-hidden border-y border-[var(--color-theme-brown)]/5">
+      {/* Organic Background Elements */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-[var(--color-theme-orange)]/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--color-theme-green)]/5 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {items.map((item, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="flex flex-col items-center text-center group"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ 
+                duration: 0.8, 
+                delay: idx * 0.2,
+                ease: [0.21, 0.47, 0.32, 0.98]
+              }}
+              whileHover={{ y: -10 }}
+              className="flex flex-col items-center text-center p-8 rounded-[2.5rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-white/50 transition-all duration-500 group"
             >
-              <div className="w-16 h-16 rounded-2xl bg-[var(--color-theme-beige)] flex items-center justify-center mb-6 group-hover:bg-[var(--color-theme-orange)] group-hover:text-white transition-all duration-500 transform group-hover:rotate-6 shadow-sm">
-                <item.icon size={32} className="text-[var(--color-theme-green)] group-hover:text-white transition-colors" />
+              {/* Artisanal Icon Container */}
+              <div className="relative mb-8">
+                <div className="absolute inset-0 bg-[var(--color-theme-beige)] rounded-[2rem] rotate-6 group-hover:rotate-12 transition-transform duration-500" />
+                <div className="relative w-20 h-20 rounded-[1.8rem] bg-white flex items-center justify-center shadow-sm group-hover:bg-[var(--color-theme-orange)] group-hover:text-white transition-all duration-500 transform group-hover:-rotate-3">
+                  <item.icon size={36} className="text-[var(--color-theme-green)] group-hover:text-white transition-colors duration-500" />
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-[var(--color-theme-brown)] mb-2">{item.title}</h3>
-              <p className="text-sm text-[var(--color-theme-brown)]/60 max-w-[200px] leading-relaxed">
+
+              <h3 className="text-xl font-bold text-[var(--color-theme-brown)] mb-3 tracking-tight font-serif">
+                {item.title}
+              </h3>
+              <p className="text-base text-[var(--color-theme-brown)]/70 max-w-[240px] leading-relaxed">
                 {item.desc}
               </p>
+              
+              {/* Subtle decorative line */}
+              <div className="mt-6 w-8 h-1 bg-[var(--color-theme-orange)]/20 rounded-full group-hover:w-16 group-hover:bg-[var(--color-theme-orange)] transition-all duration-500" />
             </motion.div>
           ))}
         </div>

@@ -58,7 +58,7 @@ export default function Navbar() {
           <div className="relative">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/40 border border-[var(--color-theme-brown)]/5 hover:bg-white/60 transition-all text-[var(--color-theme-brown)]"
+              className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-white/40 border border-[var(--color-theme-brown)]/5 hover:bg-white/60 transition-all text-[var(--color-theme-brown)]"
             >
               <Globe size={16} className="text-[var(--color-theme-green)]" />
               <span className="text-xs font-bold uppercase tracking-wider">{language}</span>
@@ -100,12 +100,12 @@ export default function Navbar() {
 
           {/* Admin Links */}
           {(role === 'admin' || role === 'super_admin') && (
-            <Link href="/admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-2 px-2 py-2 rounded-xl transition-colors text-sm">
+            <Link href="/admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-2 px-2 py-2 rounded-2xl transition-colors text-sm">
               <Settings size={18} className="text-[var(--color-theme-green)]" /> <span className="hidden lg:inline">{t.admin}</span>
             </Link>
           )}
           {role === 'super_admin' && (
-            <Link href="/super-admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-2 px-2 py-2 rounded-xl transition-colors text-sm">
+            <Link href="/super-admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-2 px-2 py-2 rounded-2xl transition-colors text-sm">
               <Settings size={18} className="text-[var(--color-theme-green)]" /> <span className="hidden lg:inline">{t.superAdmin}</span>
             </Link>
           )}
@@ -125,7 +125,7 @@ export default function Navbar() {
 
           {/* Auth Button */}
           {user ? (
-            <button onClick={handleLogout} className="flex items-center gap-2 font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] px-2 py-2 rounded-xl transition-colors text-sm">
+            <button onClick={handleLogout} className="flex items-center gap-2 font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] px-2 py-2 rounded-2xl transition-colors text-sm">
               <LogOut size={18} className="text-[var(--color-theme-green)]" /> <span className="hidden sm:inline">{t.logout}</span>
             </button>
           ) : (

@@ -139,7 +139,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--color-theme-white)]">
       <Link 
         href="/" 
-        className="fixed top-8 left-8 flex items-center gap-2 text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] transition-colors font-bold group"
+        className="fixed top-24 left-8 flex items-center gap-2 text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] transition-colors font-bold group z-10"
       >
         <ArrowLeft className="group-hover:-translate-x-1 transition-transform text-[var(--color-theme-green)]" />
         {t.back}

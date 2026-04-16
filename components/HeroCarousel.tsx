@@ -137,7 +137,7 @@ export default function HeroCarousel() {
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255,140,0,0.5)" }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleShopNow(banners[current])}
-                className="flex items-center gap-2 px-6 py-2.5 md:px-8 md:py-3 bg-[var(--color-theme-orange)] text-white rounded-full font-bold text-xs md:text-sm shadow-xl transition-all uppercase tracking-widest whitespace-nowrap"
+                className="flex items-center gap-2 px-6 py-2.5 md:px-8 md:py-3 bg-[var(--color-theme-orange)] text-white rounded-2xl font-bold text-xs md:text-sm shadow-xl transition-all uppercase tracking-widest whitespace-nowrap"
               >
                 <ShoppingCart size={18} className="md:w-5 md:h-5" />
                 {language === 'en' ? 'Shop Now' : language === 'zh' ? '立即购买' : 'Beli Sekarang'}
@@ -150,13 +150,13 @@ export default function HeroCarousel() {
       {/* Navigation Arrows */}
       <button 
         onClick={() => paginate(-1)}
-        className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40"
+        className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40"
       >
         <ChevronLeft size={24} />
       </button>
       <button 
         onClick={() => paginate(1)}
-        className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40"
+        className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40"
       >
         <ChevronRight size={24} />
       </button>

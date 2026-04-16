@@ -39,7 +39,7 @@ export default function CartSidebar() {
           >
             <div className="p-8 border-b border-[var(--color-theme-brown)]/10 flex items-center justify-between relative overflow-hidden">
               <h2 className="text-2xl font-bold text-[var(--color-theme-brown)]">{t.title}</h2>
-              <button onClick={() => setIsCartOpen(false)} className="w-10 h-10 bg-white rounded-full shadow-sm flex items-center justify-center hover:text-[var(--color-theme-orange)] transition-colors">
+              <button onClick={() => setIsCartOpen(false)} className="w-10 h-10 bg-white rounded-2xl shadow-sm flex items-center justify-center hover:text-[var(--color-theme-orange)] transition-colors">
                 <X size={24} className="text-[var(--color-theme-green)]" />
               </button>
             </div>

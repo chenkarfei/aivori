@@ -124,7 +124,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-row items-center justify-center gap-4 p-4">
                   <Link 
                     href={`/product/${product.id}`}
-                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[var(--color-theme-brown)] hover:bg-[var(--color-theme-orange)] hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg"
+                    className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-[var(--color-theme-brown)] hover:bg-[var(--color-theme-orange)] hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg"
                     title={t.viewDetails}
                   >
                     <Search size={20} />
@@ -136,7 +136,7 @@ export default function Home() {
                       handleAddToCart(product);
                     }}
                     disabled={product.stockStatus === 'out_of_stock'}
-                    className="w-12 h-12 bg-[var(--color-theme-orange)] rounded-full flex items-center justify-center text-white hover:scale-110 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-12 h-12 bg-[var(--color-theme-orange)] rounded-2xl flex items-center justify-center text-white hover:scale-110 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     title={t.add}
                   >
                     <ShoppingCart size={20} />
