@@ -204,7 +204,7 @@ export default function AdminPortal() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.0-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -272,7 +272,7 @@ export default function AdminPortal() {
       Artisanal Malaysian snack style.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash-image",
+        model: "gemini-2.0-flash-preview-image-generation",
         contents: {
           parts: [{ text: imagePrompt }]
         },
@@ -302,10 +302,8 @@ export default function AdminPortal() {
         setFormData({ ...formData, image: `https://loremflickr.com/800/800/${keywords}` });
       }
     } catch (error: any) {
-      console.error("AI Image Generation failed, falling back to search:", error);
-      // Fallback to a better search-based placeholder on error
-      const keywords = formData.name.en.toLowerCase().replace(/[^a-z0-9]/g, ',');
-      setFormData({ ...formData, image: `https://loremflickr.com/800/800/${keywords}` });
+      console.error("AI Image Generation failed:", error);
+      setErrorMessage(`Image generation failed: ${error.message}`);
     } finally {
       setIsGeneratingImage(false);
     }
