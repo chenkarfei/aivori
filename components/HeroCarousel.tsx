@@ -103,7 +103,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative w-full aspect-[1920/850] max-h-[400px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[850px] overflow-hidden shadow-2xl group bg-[var(--color-theme-beige)]"> 
+    <div className="relative w-full aspect-[16/9] md:aspect-[1920/850] max-h-[500px] md:max-h-[650px] lg:max-h-[850px] overflow-hidden shadow-2xl group bg-[var(--color-theme-beige)]">
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
           key={current}
@@ -113,8 +113,8 @@ export default function HeroCarousel() {
           animate="center"
           exit="exit"
           transition={{
-            x: { duration: 1.2, ease: [0.4, 0, 0.2, 1] },
-            opacity: { duration: 0.8 }
+            x: { duration: 4.0, ease: [0.16, 1, 0.3, 1] },
+            opacity: { duration: 3.0 }
           }}
           className="absolute inset-0 w-full h-full"
         >
@@ -122,22 +122,10 @@ export default function HeroCarousel() {
             src={banners[current].src}
             alt={banners[current].alt}
             fill
-            className="object-cover blur-2xl scale-110 opacity-50"
+            className="object-cover"
             priority
             referrerPolicy="no-referrer"
           />
-          <Image
-            src={banners[current].src}
-            alt={banners[current].alt}
-            fill
-            className="object-cover relative z-10"
-            priority
-            referrerPolicy="no-referrer"
-          />
-          
-          {/* Subtle Side Blurs for smooth transition */}
-          <div className="absolute inset-y-0 left-0 w-20 md:w-40 bg-gradient-to-r from-[var(--color-theme-beige)] via-transparent to-transparent z-20 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-20 md:w-40 bg-gradient-to-l from-[var(--color-theme-beige)] via-transparent to-transparent z-20 pointer-events-none" />
           
           {/* Subtle Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10 z-20 pointer-events-none" />

@@ -9,6 +9,8 @@ import { useStore } from '@/store/useStore';
 import { motion } from 'motion/react';
 import { ShoppingCart, Search, ShieldCheck, Weight } from 'lucide-react';
 import HeroCarousel from '@/components/HeroCarousel';
+import TrustSection from '@/components/home/TrustSection';
+import BrandSpotlight from '@/components/home/BrandSpotlight';
 
 interface Product {
   id: string;
@@ -79,7 +81,20 @@ export default function Home() {
       {/* Hero Carousel Section - Full Bleed */}
       <HeroCarousel />
 
+      {/* Trust Section */}
+      <TrustSection />
+
+      {/* Brand Spotlight */}
+      <BrandSpotlight />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--color-theme-brown)] mb-4">
+            {language === 'en' ? 'Our Collection' : language === 'zh' ? '我们的系列' : 'Koleksi Kami'}
+          </h2>
+          <div className="w-20 h-1.5 bg-[var(--color-theme-orange)] mx-auto rounded-full" />
+        </div>
+        
         {/* Product Grid - Compact Layout */}
         <div id="product-grid" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
           {products.map((product, idx) => (
