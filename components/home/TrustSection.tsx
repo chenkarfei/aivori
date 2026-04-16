@@ -38,34 +38,59 @@ export default function TrustSection() {
           {items.map((item, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ 
-                duration: 0.8, 
-                delay: idx * 0.2,
-                ease: [0.21, 0.47, 0.32, 0.98]
+                duration: 1.2, 
+                delay: idx * 0.15,
+                ease: [0.16, 1, 0.3, 1] // Custom smooth quintic ease
               }}
-              whileHover={{ y: -10 }}
-              className="flex flex-col items-center text-center p-8 rounded-[2.5rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-white/50 transition-all duration-500 group"
+              className="flex flex-col items-center text-center p-8 rounded-[2.5rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-white/50 transition-all duration-700 group"
             >
               {/* Artisanal Icon Container */}
-              <div className="relative mb-8">
-                <div className="absolute inset-0 bg-[var(--color-theme-beige)] rounded-[2rem] rotate-6 group-hover:rotate-12 transition-transform duration-500" />
-                <div className="relative w-20 h-20 rounded-[1.8rem] bg-white flex items-center justify-center shadow-sm group-hover:bg-[var(--color-theme-orange)] group-hover:text-white transition-all duration-500 transform group-hover:-rotate-3">
-                  <item.icon size={36} className="text-[var(--color-theme-green)] group-hover:text-white transition-colors duration-500" />
+              <motion.div 
+                initial={{ scale: 0.8, rotate: -10 }}
+                whileInView={{ scale: 1, rotate: 0 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 100, 
+                  damping: 15, 
+                  delay: (idx * 0.15) + 0.2 
+                }}
+                className="relative mb-8"
+              >
+                <div className="absolute inset-0 bg-[var(--color-theme-beige)] rounded-[2rem] rotate-6 group-hover:rotate-12 transition-transform duration-700 ease-out" />
+                <div className="relative w-20 h-20 rounded-[1.8rem] bg-white flex items-center justify-center shadow-sm group-hover:bg-[var(--color-theme-orange)] group-hover:text-white transition-all duration-700 transform group-hover:-rotate-3 ease-out">
+                  <item.icon size={36} className="text-[var(--color-theme-green)] group-hover:text-white transition-colors duration-700" />
                 </div>
-              </div>
+              </motion.div>
 
-              <h3 className="text-xl font-bold text-[var(--color-theme-brown)] mb-3 tracking-tight font-serif">
+              <motion.h3 
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: (idx * 0.15) + 0.3, duration: 0.8 }}
+                className="text-xl font-bold text-[var(--color-theme-brown)] mb-3 tracking-tight font-serif"
+              >
                 {item.title}
-              </h3>
-              <p className="text-base text-[var(--color-theme-brown)]/70 max-w-[240px] leading-relaxed">
+              </motion.h3>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: (idx * 0.15) + 0.4, duration: 0.8 }}
+                className="text-base text-[var(--color-theme-brown)]/70 max-w-[240px] leading-relaxed"
+              >
                 {item.desc}
-              </p>
+              </motion.p>
               
               {/* Subtle decorative line */}
-              <div className="mt-6 w-8 h-1 bg-[var(--color-theme-orange)]/20 rounded-full group-hover:w-16 group-hover:bg-[var(--color-theme-orange)] transition-all duration-500" />
+              <motion.div 
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ delay: (idx * 0.15) + 0.5, duration: 0.8 }}
+                className="mt-6 w-8 h-1 bg-[var(--color-theme-orange)]/20 rounded-full group-hover:w-16 group-hover:bg-[var(--color-theme-orange)] transition-all duration-700 ease-out origin-center" 
+              />
             </motion.div>
           ))}
         </div>
