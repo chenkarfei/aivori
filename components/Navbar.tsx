@@ -46,7 +46,7 @@ export default function Navbar() {
               alt="Aivori Logo" 
               width={180} 
               height={60} 
-              className="object-contain h-10 w-auto my-auto"
+              className="object-contain h-20 w-auto my-auto"
               referrerPolicy="no-referrer"
             />
           </Link>
