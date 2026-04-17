@@ -9,19 +9,19 @@ const content = {
   en: {
     title: 'From Nature to Your Home',
     subtitle: 'Our Story',
-    description: 'At Aivori, we believe that snacking should be both delicious and wholesome. We source the finest fruits and vegetables, using artisanal techniques to preserve their natural goodness and crunch. Every pack is a promise of quality and flavor.',
+    description: 'At Aivori, we believe that snacking should be both delicious and wholesome. We source the finest fruits and vegetables, using carefully controlled preservation techniques to retain their natural goodness and crunch. Every pack is a promise of quality and flavor.',
     cta: 'Learn More'
   },
   zh: {
     title: '从大自然到您的家',
     subtitle: '我们的故事',
-    description: '在 Aivori，我们相信零食应该是美味且健康的。我们采购最优质的蔬菜和水果，采用传统工艺保留其天然营养和松脆感。每一包都是对品质和风味的承诺。',
+    description: '在 Aivori，我们相信零食既应该美味，也应该健康。我们精选最优质的水果和蔬菜，采用严格把控的保鲜技术，保留其天然的美味与酥脆口感。每一包都是我们对品质与风味的承诺。',
     cta: '了解更多'
   },
   ms: {
     title: 'Dari Alam ke Rumah Anda',
     subtitle: 'Kisah Kami',
-    description: 'Di Aivori, kami percaya bahawa snek haruslah lazat dan sihat. Kami mendapatkan buah-buahan dan sayur-sayuran terbaik, menggunakan teknik artisanal untuk mengekalkan kebaikan semulajadi dan kerangupannya. Setiap pek adalah janji kualiti dan rasa.',
+    description: 'Di Aivori, kami percaya bahawa snek seharusnya lazat sekaligus menyihatkan. Kami memilih buah-buahan dan sayur-sayuran terbaik, menggunakan teknik pemeliharaan yang teliti dan terkawal untuk mengekalkan kebaikan semula jadi serta kerenyahannya. Setiap bungkusan adalah janji kami terhadap kualiti dan kelazatan.',
     cta: 'Ketahui Lebih Lanjut'
   }
 };
@@ -49,7 +49,7 @@ export default function BrandSpotlight() {
               src="https://i.imghippo.com/files/Nde6046PY.jpg"
               alt="Aivori Brand Story"
               fill
-              className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              className="object-cover"
               referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-theme-brown)]/40 to-transparent opacity-60" />

@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
         hostname: 'aivori-snacks.firebasestorage.app',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'loremflickr.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

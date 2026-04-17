@@ -3,6 +3,7 @@
 import { useStore } from '@/store/useStore';
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -14,10 +15,18 @@ const translations = {
 
 export default function CartSidebar() {
   const { isCartOpen, setIsCartOpen, cart, updateQuantity, removeFromCart, language } = useStore();
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
   const t = translations[language];
 
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const displayedCart = mounted ? cart : [];
+  const total = displayedCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <AnimatePresence>
@@ -45,13 +54,13 @@ export default function CartSidebar() {
             </div>
 
             <div className="flex-grow overflow-y-auto p-8 space-y-6 custom-scrollbar">
-              {cart.length === 0 ? (
+              {displayedCart.length === 0 ? (
                 <div className="text-center mt-20">
                   <div className="text-6xl mb-6 opacity-20">🛒</div>
                   <div className="text-[var(--color-theme-brown)]/40 font-bold uppercase tracking-widest text-sm">{t.empty}</div>
                 </div>
               ) : (
-                cart.map((item, idx) => (
+                displayedCart.map((item, idx) => (
                   <motion.div 
                     key={item.id} 
                     initial={{ opacity: 0, x: 20 }}
@@ -97,7 +106,7 @@ export default function CartSidebar() {
                   setIsCartOpen(false);
                   router.push('/checkout');
                 }}
-                disabled={cart.length === 0}
+                disabled={displayedCart.length === 0}
                 className="w-full py-5 foodie-button text-lg disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest"
               >
                 {t.checkout}

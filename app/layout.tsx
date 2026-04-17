@@ -5,6 +5,7 @@ import { AuthProvider } from '@/components/AuthProvider';
 import Navbar from '@/components/Navbar';
 import CartSidebar from '@/components/CartSidebar';
 import PullToRefresh from '@/components/PullToRefresh';
+import CartSync from '@/components/CartSync';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning className="bg-[var(--color-theme-beige)] text-[var(--color-theme-brown)] font-sans min-h-screen flex flex-col">
         <AuthProvider>
           <Navbar />
+          <CartSync />
           <PullToRefresh>
             <main className="flex-grow">
               {children}

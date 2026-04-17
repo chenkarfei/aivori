@@ -7,10 +7,58 @@ import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, auth, storage } from '@/lib/firebase';
 import NextImage from 'next/image';
-import { Plus, Edit, Trash2, Sparkles, Loader2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
+import { useStore } from '@/store/useStore';
+
+const adminTranslations: any = {
+  en: {
+    image: 'Image',
+    price: 'Price',
+    stock: 'Stock',
+    actions: 'Actions',
+    in_stock: 'In Stock',
+    out_of_stock: 'Out of Stock',
+    add_product: 'Add Product',
+    admin_portal: 'Admin Portal',
+    manage_inventory: 'Manage your products and inventory.',
+    count: 'Count',
+    threshold: 'Threshold',
+    reorder_needed: 'Reorder Needed'
+  },
+  zh: {
+    image: '图片',
+    price: '价格',
+    stock: '库存',
+    actions: '操作',
+    in_stock: '有现货',
+    out_of_stock: '缺货',
+    add_product: '添加产品',
+    admin_portal: '管理后台',
+    manage_inventory: '管理您的产品和库存。',
+    count: '数量',
+    threshold: '补货阈值',
+    reorder_needed: '需要补货'
+  },
+  ms: {
+    image: 'Imej',
+    price: 'Harga',
+    stock: 'Stok',
+    actions: 'Tindakan',
+    in_stock: 'Ada Stok',
+    out_of_stock: 'Tiada Stok',
+    add_product: 'Tambah Produk',
+    admin_portal: 'Portal Admin',
+    manage_inventory: 'Urus produk dan inventori anda.',
+    count: 'Bilangan',
+    threshold: 'Ambang Stok',
+    reorder_needed: 'Perlu Reorder'
+  }
+};
 
 export default function AdminPortal() {
+  const { language } = useStore();
+  const t = adminTranslations[language] || adminTranslations.en;
   const { user, role, loading } = useAuth();
   const router = useRouter();
   const [products, setProducts] = useState<any[]>([]);
@@ -22,6 +70,7 @@ export default function AdminPortal() {
   const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState<any>({
     id: '', price: 0, image: '', weight: '', isHalal: false, stockStatus: 'in_stock',
+    stockCount: 0, reorderThreshold: 10,
     name: { en: '', zh: '', ms: '' },
     description: { en: '', zh: '', ms: '' },
     ingredients: { en: '', zh: '', ms: '' }
@@ -119,6 +168,8 @@ export default function AdminPortal() {
         weight: formData.weight || '',
         isHalal: Boolean(formData.isHalal),
         stockStatus: formData.stockStatus || 'in_stock',
+        stockCount: Number(formData.stockCount) || 0,
+        reorderThreshold: Number(formData.reorderThreshold) || 0,
         name: { 
           en: formData.name?.en || '', 
           zh: formData.name?.zh || '', 
@@ -204,7 +255,7 @@ export default function AdminPortal() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3-flash-preview",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -272,7 +323,7 @@ export default function AdminPortal() {
       Artisanal Malaysian snack style.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-preview-image-generation",
+        model: "gemini-2.5-flash-image",
         contents: {
           parts: [{ text: imagePrompt }]
         },
@@ -302,8 +353,10 @@ export default function AdminPortal() {
         setFormData({ ...formData, image: `https://loremflickr.com/800/800/${keywords}` });
       }
     } catch (error: any) {
-      console.error("AI Image Generation failed:", error);
-      setErrorMessage(`Image generation failed: ${error.message}`);
+      console.error("AI Image Generation failed, falling back to search:", error);
+      // Fallback to a better search-based placeholder on error
+      const keywords = formData.name.en.toLowerCase().replace(/[^a-z0-9]/g, ',');
+      setFormData({ ...formData, image: `https://loremflickr.com/800/800/${keywords}` });
     } finally {
       setIsGeneratingImage(false);
     }
@@ -336,13 +389,14 @@ export default function AdminPortal() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-theme-brown)] mb-2">Admin Portal</h1>
-          <p className="text-[var(--color-theme-brown)]/60 font-medium">Manage your products and inventory.</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-[var(--color-theme-brown)] mb-2">{t.admin_portal}</h1>
+          <p className="text-[var(--color-theme-brown)]/60 font-medium">{t.manage_inventory}</p>
         </div>
         <button 
           onClick={() => {
             setFormData({
               id: '', price: 0, image: '', weight: '', isHalal: false, stockStatus: 'in_stock',
+              stockCount: 0, reorderThreshold: 10,
               name: { en: '', zh: '', ms: '' }, description: { en: '', zh: '', ms: '' }, ingredients: { en: '', zh: '', ms: '' }
             });
             setErrorMessage('');
@@ -350,7 +404,7 @@ export default function AdminPortal() {
           }}
           className="foodie-button py-3 px-6 flex items-center gap-2"
         >
-          <Plus size={20} /> Add Product
+          <Plus size={20} /> {t.add_product}
         </button>
       </div>
 
@@ -366,11 +420,11 @@ export default function AdminPortal() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="foodie-table-header">
-                <th className="p-6">Image</th>
-                <th className="p-6">Name (EN)</th>
-                <th className="p-6">Price</th>
-                <th className="p-6">Stock</th>
-                <th className="p-6">Actions</th>
+                <th className="p-6">{t.image}</th>
+                <th className="p-6">{language === 'en' ? 'Name' : language === 'zh' ? '名称' : 'Nama'} ({language.toUpperCase()})</th>
+                <th className="p-6">{t.price}</th>
+                <th className="p-6">{t.stock}</th>
+                <th className="p-6">{t.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-theme-brown)]/5">
@@ -393,7 +447,7 @@ export default function AdminPortal() {
                     )}
                   </td>
                   <td className="p-6">
-                    <div className="font-bold text-[var(--color-theme-brown)]">{p.name.en}</div>
+                    <div className="font-bold text-[var(--color-theme-brown)]">{p.name[language] || p.name.en}</div>
                     <div className="flex gap-1.5 mt-2">
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border ${p.name.zh && p.description.zh ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>ZH</span>
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold border ${p.name.ms && p.description.ms ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>MS</span>
@@ -401,9 +455,22 @@ export default function AdminPortal() {
                   </td>
                   <td className="p-6 text-lg font-bold text-[var(--color-theme-orange)]">RM {p.price.toFixed(2)}</td>
                   <td className="p-6">
-                    <span className={`foodie-badge ${p.stockStatus === 'in_stock' ? 'bg-[var(--color-theme-green)] text-white' : 'bg-red-500 text-white'}`}>
-                      {p.stockStatus.replace('_', ' ')}
-                    </span>
+                    <div className="flex flex-col gap-2">
+                       <span className={`foodie-badge flex items-center gap-1.5 w-fit ${p.stockStatus === 'in_stock' ? 'bg-[var(--color-theme-green)] text-white' : 'bg-red-500 text-white'}`}>
+                        {t[p.stockStatus] || p.stockStatus.replace('_', ' ')}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-[var(--color-theme-brown)]/60 uppercase tracking-widest">{t.count}: {p.stockCount || 0}</span>
+                        {(p.stockCount <= (p.reorderThreshold || 0)) && p.stockStatus === 'in_stock' && (
+                          <div className="group relative">
+                            <AlertCircle size={14} className="text-red-500 animate-pulse" />
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-red-600 text-white text-[10px] whitespace-nowrap rounded font-bold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+                              {t.reorder_needed}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </td>
                   <td className="p-6">
                     <div className="flex gap-2">
@@ -553,11 +620,19 @@ export default function AdminPortal() {
                   <span className="font-bold text-[var(--color-theme-brown)] group-hover:text-[var(--color-theme-orange)] transition-colors">Halal Certified</span>
                 </label>
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-[var(--color-theme-brown)]">Stock Status:</span>
-                  <select value={formData.stockStatus} onChange={e => setFormData({...formData, stockStatus: e.target.value})} className="foodie-input py-2 text-sm font-bold w-auto min-w-[160px]">
+                  <span className="font-bold text-[var(--color-theme-brown)]">Status:</span>
+                  <select value={formData.stockStatus} onChange={e => setFormData({...formData, stockStatus: e.target.value})} className="foodie-input py-2 text-sm font-bold w-auto min-w-[150px]">
                     <option value="in_stock">In Stock</option>
                     <option value="out_of_stock">Out of Stock</option>
                   </select>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-[var(--color-theme-brown)]">{t.count}:</span>
+                  <input type="number" value={formData.stockCount} onChange={e => setFormData({...formData, stockCount: parseInt(e.target.value) || 0})} className="foodie-input py-2 text-sm font-bold w-24 text-center" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-[var(--color-theme-brown)]">{t.threshold}:</span>
+                  <input type="number" value={formData.reorderThreshold} onChange={e => setFormData({...formData, reorderThreshold: parseInt(e.target.value) || 0})} className="foodie-input py-2 text-sm font-bold w-24 text-center" />
                 </div>
               </div>
 

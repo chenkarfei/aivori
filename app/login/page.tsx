@@ -10,9 +10,10 @@ import {
 } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import { LogIn, UserPlus, Mail, Lock, Chrome, ArrowLeft, Loader2 } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, Chrome, ArrowLeft, Loader2, User, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useStore } from '@/store/useStore';
+import { doc, setDoc } from 'firebase/firestore';
 
 const translations = {
   en: {
@@ -21,6 +22,9 @@ const translations = {
     signupTitle: 'Create Account',
     signupSubtitle: 'Join our foodie community',
     email: 'Email Address',
+    name: 'Full Name',
+    phone: 'Phone Number',
+    address: 'Delivery Address',
     password: 'Password',
     login: 'Login',
     signup: 'Sign Up',
@@ -36,6 +40,9 @@ const translations = {
     signupTitle: '创建账户',
     signupSubtitle: '加入我们的美食社区',
     email: '电子邮件地址',
+    name: '全名',
+    phone: '电话号码',
+    address: '送货地址',
     password: '密码',
     login: '登录',
     signup: '注册',
@@ -51,6 +58,9 @@ const translations = {
     signupTitle: 'Cipta Akaun',
     signupSubtitle: 'Sertai komuniti foodie kami',
     email: 'Alamat Emel',
+    name: 'Nama Penuh',
+    phone: 'Nombor Telefon',
+    address: 'Alamat Penghantaran',
     password: 'Kata Laluan',
     login: 'Log Masuk',
     signup: 'Daftar',
@@ -66,6 +76,9 @@ export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -97,7 +110,19 @@ export default function LoginPage() {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        // Save initial profile data
+        const isDefaultAdmin = email === 'evotech4001@gmail.com';
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          email: user.email,
+          role: isDefaultAdmin ? 'super_admin' : 'client',
+          name,
+          phone,
+          address,
+          createdAt: new Date().toISOString()
+        });
       }
       router.push('/');
     } catch (err: any) {
@@ -167,6 +192,55 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleEmailAuth} className="space-y-6">
+            {!isLogin && (
+              <>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest opacity-40 ml-1">{t.name}</label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-theme-green)]" size={18} />
+                    <input 
+                      type="text" 
+                      required 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="foodie-input !pl-12" 
+                      placeholder="John Doe" 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest opacity-40 ml-1">{t.phone}</label>
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-theme-green)]" size={18} />
+                    <input 
+                      type="tel" 
+                      required 
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="foodie-input !pl-12" 
+                      placeholder="+60 12-345 6789" 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest opacity-40 ml-1">{t.address}</label>
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-4 text-[var(--color-theme-green)]" size={18} />
+                    <textarea 
+                      required 
+                      rows={2}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="foodie-input !pl-12 resize-none" 
+                      placeholder="Your full delivery address" 
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest opacity-40 ml-1">{t.email}</label>
               <div className="relative">

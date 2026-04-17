@@ -8,9 +8,12 @@
         "uid": { "type": "string", "description": "Firebase Auth UID" },
         "email": { "type": "string", "format": "email" },
         "role": { "type": "string", "enum": ["client", "admin", "super_admin"] },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["uid", "email", "role", "createdAt"]
+      "required": ["uid", "email", "role", "name", "phone", "address", "createdAt"]
     },
     "LocalizedString": {
       "title": "LocalizedString",
@@ -49,9 +52,10 @@
         "productId": { "type": "string" },
         "quantity": { "type": "number" },
         "priceAtPurchase": { "type": "number" },
-        "name": { "$ref": "#/entities/LocalizedString" }
+        "name": { "$ref": "#/entities/LocalizedString" },
+        "image": { "type": "string", "format": "uri" }
       },
-      "required": ["productId", "quantity", "priceAtPurchase", "name"]
+      "required": ["productId", "quantity", "priceAtPurchase", "name", "image"]
     },
     "Order": {
       "title": "Order",
@@ -60,6 +64,16 @@
       "properties": {
         "orderId": { "type": "string" },
         "userId": { "type": "string" },
+        "customerInfo": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "phone": { "type": "string" },
+            "address": { "type": "string" }
+          },
+          "required": ["name", "email", "phone", "address"]
+        },
         "items": {
           "type": "array",
           "items": { "$ref": "#/entities/OrderItem" }
@@ -68,7 +82,7 @@
         "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
         "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["orderId", "userId", "items", "totalAmount", "status", "createdAt"]
+      "required": ["orderId", "userId", "customerInfo", "items", "totalAmount", "status", "createdAt"]
     }
   },
   "firestore": {
@@ -83,6 +97,21 @@
     "/orders/{orderId}": {
       "schema": { "$ref": "#/entities/Order" },
       "description": "Customer orders"
+    },
+    "/carts/{userId}": {
+      "schema": {
+        "title": "Cart",
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/entities/OrderItem" }
+          },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["items", "updatedAt"]
+      },
+      "description": "User shopping carts"
     }
   }
 }
