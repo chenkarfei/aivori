@@ -4,7 +4,6 @@ import './globals.css';
 import { AuthProvider } from '@/components/AuthProvider';
 import Navbar from '@/components/Navbar';
 import CartSidebar from '@/components/CartSidebar';
-import PullToRefresh from '@/components/PullToRefresh';
 import CartSync from '@/components/CartSync';
 
 const inter = Inter({
@@ -29,11 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <Navbar />
           <CartSync />
-          <PullToRefresh>
-            <main className="flex-grow">
-              {children}
-            </main>
-          </PullToRefresh>
+          <main className="flex-grow">
+            {children}
+          </main>
           <CartSidebar />
         </AuthProvider>
       </body>
