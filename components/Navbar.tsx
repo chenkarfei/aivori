@@ -61,7 +61,7 @@ export default function Navbar() {
         <div className="flex-1 flex items-center h-full shrink-0">
           <Link href="/" className="flex items-center hover:opacity-80 transition-opacity h-full">
             <Image 
-              src="https://i.imghippo.com/files/igKd6266Uz.png" 
+              src="https://i.imghippo.com/files/oz1398tAk.png" 
               alt="Aivori Logo" 
               width={100} 
               height={25} 
