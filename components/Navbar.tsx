@@ -73,6 +73,32 @@ export default function Navbar() {
 
         {/* Right Section (Actions) */}
         <div className="flex items-center justify-end gap-1 sm:gap-4 h-full">
+          {/* Nav Links */}
+          <div className="flex items-center gap-0.5 sm:gap-2 h-full">
+            <Link href="/" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
+              <Home size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
+              <span className="hidden md:inline">{t.home}</span>
+            </Link>
+            {user && role === 'client' && (
+              <Link href="/orders" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
+                <History size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
+                <span className="hidden md:inline">{t.orders}</span>
+              </Link>
+            )}
+            {(role === 'admin' || role === 'super_admin') && (
+              <Link href="/admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
+                <ShieldCheck size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
+                <span className="hidden md:inline">{t.admin}</span>
+              </Link>
+            )}
+            {role === 'super_admin' && (
+              <Link href="/super-admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
+                <LayoutDashboard size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
+                <span className="hidden md:inline">{t.superAdmin}</span>
+              </Link>
+            )}
+          </div>
+
           {/* Custom Language Dropdown */}
           <div className="relative">
             <button
@@ -115,32 +141,6 @@ export default function Navbar() {
                 </>
               )}
             </AnimatePresence>
-          </div>
-
-          {/* Nav Links */}
-          <div className="flex items-center gap-0.5 sm:gap-2 h-full">
-            <Link href="/" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
-              <Home size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
-              <span className="hidden md:inline">{t.home}</span>
-            </Link>
-            {user && role === 'client' && (
-              <Link href="/orders" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
-                <History size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
-                <span className="hidden md:inline">{t.orders}</span>
-              </Link>
-            )}
-            {(role === 'admin' || role === 'super_admin') && (
-              <Link href="/admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
-                <ShieldCheck size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
-                <span className="hidden md:inline">{t.admin}</span>
-              </Link>
-            )}
-            {role === 'super_admin' && (
-              <Link href="/super-admin" className="font-bold text-[var(--color-theme-brown)] hover:text-[var(--color-theme-orange)] flex items-center gap-1.5 px-2 py-2 rounded-xl transition-colors text-xs whitespace-nowrap group">
-                <LayoutDashboard size={16} className="text-[var(--color-theme-green)] group-hover:scale-110 transition-transform" /> 
-                <span className="hidden md:inline">{t.superAdmin}</span>
-              </Link>
-            )}
           </div>
 
           {/* Actions */}
