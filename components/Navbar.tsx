@@ -58,10 +58,10 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 foodie-glass w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between relative">
         {/* Left Section (Logo) */}
-        <div className="flex-1 flex items-center h-full shrink-0">
+        <div className="flex items-center h-full shrink-0 -ml-2">
           <Link href="/" className="flex items-center hover:opacity-80 transition-opacity h-full">
             <Image 
-              src="https://i.imghippo.com/files/oz1398tAk.png" 
+              src="https://imghosting.in/host/ibb19n" 
               alt="Aivori Logo" 
               width={100} 
               height={25} 

@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
         hostname: 'loremflickr.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imghosting.in',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
