@@ -56,7 +56,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 foodie-glass w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
         {/* Left Section (Logo) */}
         <div className="flex items-center h-full shrink-0 -ml-2">
           <Link href="/" className="flex items-center hover:opacity-80 transition-opacity h-full">

@@ -12,14 +12,14 @@ import { db } from '@/lib/firebase';
 const banners = [
   {
     id: 1,
-    src: 'https://i.imghippo.com/files/KDZn8497PtU.png',
+    src: 'https://i.imghippo.com/files/bCP7817vdc.png',
     alt: 'Main Banner',
     showButton: false,
     link: null
   },
   {
     id: 2,
-    src: 'https://i.imghippo.com/files/g8857sw.png',
+    src: 'https://i.imghippo.com/files/OQWx4639nDo.png',
     alt: 'Dragon Fruit Snacks',
     showButton: true,
     productName: 'Dragon Fruit',
@@ -27,7 +27,7 @@ const banners = [
   },
   {
     id: 3,
-    src: 'https://i.imghippo.com/files/Ylln8587Fs.png',
+    src: 'https://i.imghippo.com/files/mJ8370xk.png',
     alt: 'Mixed Vegetable Snacks',
     showButton: true,
     productName: 'Mix Vege',
